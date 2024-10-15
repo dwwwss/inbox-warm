@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Subscription";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 mt-4">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div>
+                    <h2 class="h3">
+                        <span class="fas fa-calendar pr-2"></span> Current Subscription
+                    </h2>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="h6">Mailboxes Purchased</div>
+                            <div class="h4 text-primary">1</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="h6">Mailboxes Used</div>
+                            <div class="h4 text-primary">0</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="h6">Current Monthly Cost</div>
+                            <div>
+                                <p class="h6 text-secondary">Free<span class="font-small">(10 emails daily)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div>
+                    <h2 class="h3">
+                        <span class="fas fa-calendar-check pr-2"></span> Update Subscription
+                    </h2>
+                    <hr />
+                    <form action="/Purchase/VerifyPurchase" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="h6">Add/Remove Mailboxes</div>
+                                <input type="number" id="selectedAmountInput" name="selectedAmountInput" min="1" max="10000" value="1" class="form-control" style="width:100px;" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="h6">New Monthly Cost</div>
+                                <div class="row">
+                                    <p class="h4 text-primary" id="calculatedPrice">$0</p>&nbsp; &nbsp;<p id="calculatedPriceChange">$0</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-5">
+                            <input type="submit" value="Update Subscription" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer section py-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+              @*   <p class="mb-0 text-center text-xl-left">Copyright © 2019-<span class="current-year">2024</span> <a class="text-primary font-weight-normal" href="https://InboxWarmUp.com" target="_blank">InboxWarmUp</a></p> *@
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<EmailRecipient>
+<h2 class="text-center mb-4" style="color: #0A1F44; font-family: 'Poppins', sans-serif;">Email Recipients</h2>
+<div class="container">
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recipient in Model)
+            {
+                <tr>
+                    <td>@recipient.Email</td>
+                    <td>
+                        <form asp-action="RemoveRecipient" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@recipient.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3 class="mt-4" style="color: #0A1F44; font-family: 'Poppins', sans-serif;">Add a New Recipient</h3>
+    <form asp-action="AddRecipient" method="post" class="mt-3">
+        <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Enter recipient's email" required />
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Add Recipient</button>
+    </form>
+</div>
+<style>
+    body {
+        background-color: #F8F9FA; /* Light background for contrast */
+        font-family: 'Poppins', sans-serif;
+        color: #333; /* Darker text color */
+    }
+
+    .container {
+        margin-top: 50px; /* Add space from the top */
+        background-color: #fff; /* White background for the container */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px; /* Padding inside the container */
+        box-shadow: 0 2px 10px #C3C6D4; /* Subtle shadow */
+    }
+
+    .table {
+        margin-top: 20px; /* Space above the table */
+        border-radius: 10px; /* Rounded corners for the table */
+        overflow: hidden; /* Prevent overflow for the rounded corners */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #F2F2F2; /* Light gray for odd rows */
+    }
+
+    .btn-danger {
+        background-color: #DC3545; /* Custom red */
+        border: none; /* Remove border */
+    }
+
+        .btn-danger:hover {
+            background-color: #C82333; /* Darker red on hover */
+        }
+
+    .btn-primary {
+        background-color: #007BFF; /* Custom blue */
+        border: none; /* Remove border */
+    }
+
+        .btn-primary:hover {
+            background-color: #0056B3; /* Darker blue on hover */
+        }
+</style>

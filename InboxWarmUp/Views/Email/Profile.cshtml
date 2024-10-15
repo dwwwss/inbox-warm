@@ -1,0 +1,99 @@
+﻿@model InboxWarmUp.Models.User
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Profile</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form id="profileForm" method="post" asp-action="UpdateProfile">
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="form-group mb-3">
+                    <label for="firstName" class="form-label text-dark"><i class="fas fa-user me-2"></i>First Name</label>
+                    <input type="text" class="form-control" name="FirstName" id="firstName" placeholder="Enter first name" value="@Model.FirstName" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="lastName" class="form-label text-dark"><i class="fas fa-user me-2"></i>Last Name</label>
+                    <input type="text" class="form-control" name="LastName" id="lastName" placeholder="Enter last name" value="@Model.LastName" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label text-dark"><i class="fas fa-envelope me-2"></i>Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" value="@Model.Email" disabled />
+                </div>
+
+                <button type="button" class="btn btn-secondary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                    <i class="fas fa-key me-2"></i>Change Password
+                </button>
+
+                @* Display error messages *@
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                }
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                }
+
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save me-2"></i>Update Profile</button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p class="text-muted">&copy; 2024 WarmUpInbox</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Change Password Modal *@
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm" method="post" asp-action="ChangePassword">
+                    <div class="form-group mb-3">
+                        <label for="currentPassword" class="form-label text-dark"><i class="fas fa-lock me-2"></i>Current Password</label>
+                        <input type="password" class="form-control" name="CurrentPassword" id="currentPassword" placeholder="•••••••••••" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="newPassword" class="form-label text-dark"><i class="fas fa-lock me-2"></i>New Password</label>
+                        <input type="password" class="form-control" name="NewPassword" id="newPassword" placeholder="•••••••••••" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="confirmNewPassword" class="form-label text-dark"><i class="fas fa-lock me-2"></i>Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmNewPassword" placeholder="•••••••••••" required />
+                        <div id="confirmNewPasswordError" class="text-danger" style="display:none;">Passwords do not match!</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-key me-2"></i>Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('changePasswordForm').addEventListener('submit', function (e) {
+        var newPassword = document.getElementById('newPassword').value;
+        var confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+        if (newPassword !== confirmNewPassword) {
+            e.preventDefault(); // Prevent form submission
+            document.getElementById('confirmNewPasswordError').style.display = 'block';
+        } else {
+            document.getElementById('confirmNewPasswordError').style.display = 'none';
+        }
+    });
+</script>

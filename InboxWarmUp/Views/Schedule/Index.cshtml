@@ -1,0 +1,194 @@
+﻿@model IEnumerable<InboxWarmUp.Models.EmailSchedule>
+
+@{
+    var emailAccounts = ViewBag.EmailAccounts as List<InboxWarmUp.Models.EmailAccount>; // Declare emailAccounts only once
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Create Email Schedule</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="CreateSchedule" method="post">
+                <div class="form-group mb-3">
+                    <label class="form-label text-dark">Email Account</label>
+                    @if (emailAccounts != null && emailAccounts.Any())
+                    {
+                        <select name="EmailAccountId" class="form-select" required>
+                            <option value="">Select an Email Account</option>
+                            @foreach (var account in emailAccounts)
+                            {
+                                <option value="@account.Id">@account.Email</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <p class="text-danger">No email accounts available</p>
+                    }
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label text-dark">Time</label>
+                    <input type="time" name="Time" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label text-dark">Days (comma-separated, e.g., Monday, Wednesday)</label>
+                    <input type="text" name="Days" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label text-dark" for="frequency">Number of Recipients</label>
+                    <input type="number" id="frequency" name="Frequency" class="form-control" min="1" required />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" name="IsActive" class="form-check-input" value="true" id="isActiveCheck" />
+                    <label class="form-check-label text-dark" for="isActiveCheck">Is Active</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Create Schedule</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="mt-5 text-primary">Email Schedules</h2>
+
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Days</th>
+                    <th scope="col">Frequency</th>
+                    <th scope="col">Is Active</th>
+                    <th scope="col">Email Account</th>
+                    <th scope="col">Actions</th> <!-- Added Actions column -->
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var schedule in Model)
+                    {
+                        <tr data-id="@schedule.Id">
+                            <td>@schedule.Time</td>
+                            <td>@schedule.Days</td>
+                            <td>@schedule.Frequency</td>
+                            <td>
+                                @if (schedule.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                @if (schedule.EmailAccount != null)
+                                {
+                                    @schedule.EmailAccount.Email
+                                }
+                                else
+                                {
+                                    <em>No Email Account</em>
+                                }
+                            </td>
+                            <td>
+                                <!-- Action buttons -->
+                                <button class="btn btn-warning btn-sm stop-schedule" data-id="@schedule.Id">Stop</button>
+
+                                <button class="btn btn-success btn-sm run-schedule" data-id="@schedule.Id" @if (schedule.IsActive)
+                                {
+                                    <text>disabled</text>
+                                }>Run</button>
+
+                                <button class="btn btn-danger btn-sm delete-schedule" data-id="@schedule.Id">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No schedules available</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Handle Stop Schedule
+        $('.stop-schedule').click(function (e) {
+            e.preventDefault(); // Prevent default action
+            var scheduleId = $(this).data('id');
+            $.ajax({
+                url: '@Url.Action("StopSchedule")',
+                method: 'POST',
+                data: { id: scheduleId },
+                success: function (response) {
+                    alert(response.message); // Show success message
+                    // Optionally, update the UI to reflect the stopped status
+                    var row = $('tr[data-id="' + scheduleId + '"]');
+                    row.find('td:nth-child(4)').html('<span class="badge bg-secondary">Inactive</span>'); // Update status
+                    // Re-enable the Run button
+                    row.find('.run-schedule').prop('disabled', false); // Enable the Run button
+                },
+                error: function (xhr) {
+                    alert('Error stopping the schedule');
+                }
+            });
+        });
+
+
+        // Handle Run Schedule
+        $('.run-schedule').click(function (e) {
+            e.preventDefault(); // Prevent default action
+            var scheduleId = $(this).data('id');
+            $.ajax({
+                url: '@Url.Action("RunSchedule")',
+                method: 'POST',
+                data: { id: scheduleId },
+                success: function (response) {
+                    alert(response.message); // Show success message
+                    // Optionally, update the UI to reflect the run status
+                    var row = $('tr[data-id="' + scheduleId + '"]');
+                    row.find('td:nth-child(4)').html('<span class="badge bg-success">Active</span>'); // Update status
+                    row.find('.run-schedule').prop('disabled', true); // Disable the Run button
+                },
+                error: function (xhr) {
+                    alert('Error running the schedule');
+                }
+            });
+        });
+
+
+        // Handle Delete Schedule
+        $('.delete-schedule').click(function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to delete this schedule?')) {
+                var scheduleId = $(this).data('id');
+                $.ajax({
+                    url: '@Url.Action("DeleteSchedule")',
+                    method: 'POST',
+                    data: { id: scheduleId },
+                    success: function (response) {
+                        alert(response.message); // Show success message
+                        // Remove the row from the table
+                        $('tr[data-id="' + scheduleId + '"]').remove();
+                    },
+                    error: function (xhr) {
+                        alert('Error deleting the schedule');
+                    }
+                });
+            }
+        });
+    });
+</script>

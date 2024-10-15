@@ -1,0 +1,193 @@
+﻿@model InboxWarmUp.ViewModels.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/LoginRegisterLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - InboxWarmUp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/jquery-validation/jquery.validate.min.js" />
+    <link rel="stylesheet" href="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" />
+    <style>
+        body {
+            background-color: #0A1F44; /* Dark Blue/Purple background */
+            display: flex;
+            flex-direction: column; /* Arrange children in a column */
+            align-items: center;
+            justify-content: center; /* Center vertically */
+            min-height: 100vh; /* Use min-height for proper centering */
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* Arrange children in a column */
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px; /* Added padding to the container for consistent spacing */
+        }
+
+        .login-container {
+            background-color: white;
+            padding-top: 2rem; /* Match padding with the login container */
+            padding-left: 3rem; /* Match padding with the login container */
+            padding-right: 3rem; /* Match padding with the login container */
+            padding-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px; /* Adjust max-width to match the login container */
+            text-align: center;
+            color: #0A1F44; /* Dark Blue Text for form content */
+        }
+
+        .logo {
+            max-width: 60px; /* Adjust this value to resize your logo */
+            width: 100%; /* Make logo responsive */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 1.5rem; /* Space below logo */
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0A1F44; /* Dark Blue */
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            border: 1px solid #CED4DA;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+            .form-control:focus {
+                box-shadow: none;
+                border-color: #0A74DC; /* Light Blue */
+            }
+
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0A74DC; /* Eye icon in light blue */
+        }
+
+        .text-muted {
+            font-size: 0.9rem;
+            color: #6C757D;
+        }
+
+        .register-btn {
+            background-color: #0A74DC; /* Light Blue */
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+            .register-btn:hover {
+                background-color: #084298; /* Darker blue on hover */
+            }
+
+        .footer-text {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: white;
+            text-align: center; /* Center the footer text */
+            position: relative; /* Relative positioning for proper layout */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <img src="~/images/envelope_15623482.png" alt="Logo" class="logo" />
+            <h2 class="text-center">Register</h2>
+            <form asp-action="Register" method="post" novalidate="novalidate">
+                <div class="mb-3">
+                    <input asp-for="FirstName" class="form-control" placeholder="First Name" required />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input asp-for="LastName" class="form-control" placeholder="Last Name" required />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" required autocomplete="off" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3 position-relative">
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Password" required autocomplete="off" />
+                    <span class="password-toggle" onclick="togglePasswordVisibility()">👁️</span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3 position-relative">
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" required autocomplete="off" />
+                    <span class="password-toggle" onclick="togglePasswordVisibility()">👁️</span>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <!-- New Company Information Fields -->
+                <div class="mb-3">
+                    <input asp-for="CompanyName" class="form-control" placeholder="Company Name" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <select id="CompanySize" class="form-select" placeholder="Company Size" asp-for="CompanySize" required>
+                        <option value="" disabled selected>Select Company Size</option>
+                        <option value="11-50">11-50</option>
+                        <option value="51-100">51-100</option>
+                        <option value="101-500">101-500</option>
+                        <option value="500+">500+</option>
+                    </select>
+                    <span asp-validation-for="CompanySize" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input asp-for="CompanyWebsite" class="form-control" placeholder="Company Website" />
+                    <span asp-validation-for="CompanyWebsite" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input asp-for="CompanyType" class="form-control" placeholder="Company Type (e.g., LLC, Corporation)" />
+                    <span asp-validation-for="CompanyType" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn register-btn">Register</button>
+            </form>
+            <p class="mt-3 text-muted">
+                Already have an account?
+                @Html.ActionLink("Login here", "Login", "Account", null, new { @class = "text-primary" })
+            </p>
+        </div>
+    </div>
+    <div class="footer-text">
+        © 2024 WarmUpInbox
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordFields = document.querySelectorAll('input[type="password"]');
+            passwordFields.forEach(passwordField => {
+                const passwordType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', passwordType);
+            });
+        }
+    </script>
+</body>
+</html>

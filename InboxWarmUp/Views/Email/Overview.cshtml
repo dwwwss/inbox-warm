@@ -1,0 +1,37 @@
+﻿@model InboxWarmUp.Models.OverviewModel
+@{
+    ViewData["Title"] = "Overview";
+}
+<div class="container-fluid p-4">
+    <h1 class="h3 mb-4 text-center">Overview</h1>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card bg-primary text-white shadow-sm card-hover">
+                <div class="card-body text-center">
+                    <i class="fas fa-envelope fa-2x mb-3"></i>
+                    <h5 class="card-title">Total Mailboxes</h5>
+                    <p class="card-text display-4">@Model.TotalMailboxes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card bg-success text-white shadow-sm card-hover">
+                <div class="card-body text-center">
+                    <i class="fas fa-envelope-open-text fa-2x mb-3"></i>
+                    <h5 class="card-title">Active Mailboxes</h5>
+                    <p class="card-text display-4">@Model.ActiveMailboxes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card bg-danger text-white shadow-sm card-hover">
+                <div class="card-body text-center">
+                    <i class="fas fa-envelope-open-text fa-2x mb-3"></i>
+                    <h5 class="card-title">Inactive Mailboxes</h5>
+                    <p class="card-text display-4">@Model.InactiveMailboxes</p>
+                </div>
+            </div>
+        </div>
+        @* Other stats can go here *@
+    </div>
+</div>
